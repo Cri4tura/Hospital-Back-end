@@ -2,25 +2,25 @@ package com.hospital.hospital.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Enfermero {
+public class Nurse {
 	
 	@JsonProperty("nombre")
-	private String nombre;
+	private String name;
 	
 	@JsonProperty("password")
 	private String password;
 	
-	public Enfermero(String nombre, String password) {
+	public Nurse(String name, String password) {
 		super();
-		this.nombre = nombre;
+		this.name = name;
 		this.password = password;
 	}
 	
-	public String getNombre() {
-		return nombre;
+	public String getName() {
+		return name;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String nombre) {
+		this.name = nombre;
 	}
 	public String getPassword() {
 		return password;

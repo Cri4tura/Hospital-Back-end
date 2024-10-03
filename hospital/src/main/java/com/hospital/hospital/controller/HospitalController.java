@@ -7,43 +7,43 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hospital.hospital.model.Enfermero;
+import com.hospital.hospital.model.Nurse;
 
 
 
 
 
-@RestController
+@RestController("/nurse")
 public class HospitalController {
 	
-	private ArrayList<Enfermero> listaEnfermeros;
+	private ArrayList<Nurse> nurseList;
 
     public HospitalController() {
-        listaEnfermeros = new ArrayList<>();
-        listaEnfermeros.add(new Enfermero("Juan Pérez", "abc123"));
-        listaEnfermeros.add(new Enfermero("María López", "password456"));
-        listaEnfermeros.add(new Enfermero("Carlos Sánchez", "secure789"));
-        listaEnfermeros.add(new Enfermero("Laura García", "pass123"));
-        listaEnfermeros.add(new Enfermero("José Fernández", "qwerty987"));
-        listaEnfermeros.add(new Enfermero("Ana Rodríguez", "123secure"));
-        listaEnfermeros.add(new Enfermero("Luis Martínez", "nursepass"));
-        listaEnfermeros.add(new Enfermero("Sofía Gómez", "clave321"));
-        listaEnfermeros.add(new Enfermero("Pedro Ruiz", "mypassword"));
-        listaEnfermeros.add(new Enfermero("Elena Ramírez", "pass456"));
+        nurseList = new ArrayList<>();
+        nurseList.add(new Nurse("Juan Pérez", "abc123"));
+        nurseList.add(new Nurse("María López", "password456"));
+        nurseList.add(new Nurse("Carlos Sánchez", "secure789"));
+        nurseList.add(new Nurse("Laura García", "pass123"));
+        nurseList.add(new Nurse("José Fernández", "qwerty987"));
+        nurseList.add(new Nurse("Ana Rodríguez", "123secure"));
+        nurseList.add(new Nurse("Luis Martínez", "nursepass"));
+        nurseList.add(new Nurse("Sofía Gómez", "clave321"));
+        nurseList.add(new Nurse("Pedro Ruiz", "mypassword"));
+        nurseList.add(new Nurse("Elena Ramírez", "pass456"));
     }
 
-	@GetMapping("/enfermeros") 
-	public ArrayList<Enfermero> obtenerEnfermeros() {
+	@GetMapping("/index") 
+	public ArrayList<Nurse> getAll() {
 
-        return listaEnfermeros;
+        return nurseList;
     }
 	
 	@PostMapping("/login") 
-	public boolean validarLogin(@RequestParam String usuario, @RequestParam String password) {
+	public boolean login(@RequestParam String user, @RequestParam String password) {
         boolean logged = false;
         
-        for (Enfermero enfermero : listaEnfermeros) {
-            if (enfermero.getNombre().equals(usuario) && enfermero.getPassword().equals(password)) {
+        for (Nurse enfermero : nurseList) {
+            if (enfermero.getName().equals(user) && enfermero.getPassword().equals(password)) {
                 logged = true; 
             }
         }
