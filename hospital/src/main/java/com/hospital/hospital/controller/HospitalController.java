@@ -3,6 +3,7 @@ package com.hospital.hospital.controller;
 import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +54,16 @@ public class HospitalController {
         return logged;
     }
     
+	
+	@GetMapping("/name/{name}")
+	public Nurse findName(@PathVariable String name){
+		for (Nurse nurse : nurseList) {
+			if (name.equals(nurse.getName())) {
+				return nurse;
+			}
+		}
+		return null;
+	}
 	
 
 }
