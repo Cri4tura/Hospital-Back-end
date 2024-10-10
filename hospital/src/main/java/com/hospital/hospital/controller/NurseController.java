@@ -17,11 +17,11 @@ import com.hospital.hospital.model.Nurse;
 
 @RestController
 @RequestMapping("/nurse")
-public class HospitalController {
+public class NurseController {
 	
 	private ArrayList<Nurse> nurseList;
 
-    public HospitalController() {
+    public NurseController() {
         nurseList = new ArrayList<>();
         nurseList.add(new Nurse("Juan Pérez", "abc123"));
         nurseList.add(new Nurse("María López", "password456"));
