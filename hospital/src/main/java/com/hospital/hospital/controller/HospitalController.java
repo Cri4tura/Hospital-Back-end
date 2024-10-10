@@ -2,11 +2,15 @@ package com.hospital.hospital.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.hospital.model.Nurse;
@@ -42,16 +46,14 @@ public class HospitalController {
     }
 	
 	@PostMapping("/login") 
-	public boolean login(@RequestParam String user, @RequestParam String password) {
-        boolean logged = false;
+	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String user, @RequestParam String password) {
         
-        for (Nurse enfermero : nurseList) {
-            if (enfermero.getName().equals(user) && enfermero.getPassword().equals(password)) {
-                logged = true; 
+        for (Nurse nurse : nurseList) {
+            if (nurse.getName().equals(user) && nurse.getPassword().equals(password)) {
+            	return ResponseEntity.ok(true);
             }
         }
-
-        return logged;
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
     }
     
 	
