@@ -1,8 +1,6 @@
 package com.hospital.hospital.controller;
 
-import java.util.ArrayList;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,38 +12,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hospital.hospital.model.Nurse;
-
-
-
+import com.hospital.hospital.dao.NurseRepository;
+import entity.Nurse;
 
 
 @RestController
 @RequestMapping("/nurse")
 public class NurseController {
+	@Autowired 
 	
-	private ArrayList<Nurse> nurseList;
-
-    public NurseController() {
-        nurseList = new ArrayList<>();
-        nurseList.add(new Nurse("Juan Pérez", "abc123"));
-        nurseList.add(new Nurse("María López", "password456"));
-        nurseList.add(new Nurse("Carlos Sánchez", "secure789"));
-        nurseList.add(new Nurse("Laura García", "pass123"));
-        nurseList.add(new Nurse("José Fernández", "qwerty987"));
-        nurseList.add(new Nurse("Ana Rodríguez", "123secure"));
-        nurseList.add(new Nurse("Luis Martínez", "nursepass"));
-        nurseList.add(new Nurse("Sofía Gómez", "clave321"));
-        nurseList.add(new Nurse("Pedro Ruiz", "mypassword"));
-        nurseList.add(new Nurse("Elena Ramírez", "pass456"));
-    }
+	private NurseRepository nurseRepository;
 
 	@GetMapping("/index") 
-	public ArrayList<Nurse> getAll() {
-
-        return nurseList;
+	public @ResponseBody Iterable<Nurse> getAll() {
+		return nurseRepository.findAll();
     }
 	
+	
+	/*
 	@PostMapping("/login") 
 	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String user, @RequestParam String password) {
         
@@ -67,6 +51,6 @@ public class NurseController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+	*/
 
 }
