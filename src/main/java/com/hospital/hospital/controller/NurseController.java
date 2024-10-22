@@ -1,5 +1,7 @@
 package com.hospital.hospital.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +43,12 @@ public class NurseController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
     }
     
+	*/
 	
 	@GetMapping("/name/{name}")
-	public ResponseEntity<Nurse> findName(@PathVariable String name){
-		for (Nurse nurse : nurseList) {
-			if (name.equals(nurse.getName())) {
-				return ResponseEntity.ok(nurse);
-			}
-		}
-		return ResponseEntity.notFound().build();
+	public @ResponseBody Optional<Nurse> findByName(@PathVariable("name") String name){
+		return nurseRepository.findByName(name);
 	}
-	*/
+	
 
 }
