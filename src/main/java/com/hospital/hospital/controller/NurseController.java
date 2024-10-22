@@ -31,19 +31,12 @@ public class NurseController {
     }
 	
 	
-	/*
-	@PostMapping("/login") 
-	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String user, @RequestParam String password) {
-        
-        for (Nurse nurse : nurseList) {
-            if (nurse.getName().equals(user) && nurse.getPassword().equals(password)) {
-            	return ResponseEntity.ok(true);
-            }
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
-    }
-    
-	*/
+	@PostMapping("/login")
+	public @ResponseBody boolean login(@RequestParam String name, @RequestParam String password) {
+		 Optional<Nurse> nurse = nurseRepository.validateLogin(name, password);
+		    return nurse.isPresent(); 
+		    
+	}
 	
 	@GetMapping("/name/{name}")
 	public @ResponseBody Optional<Nurse> findByName(@PathVariable("name") String name){
