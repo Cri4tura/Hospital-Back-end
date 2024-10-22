@@ -58,8 +58,8 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>DAM1_M03_UF3_POO_Shop5.0</groupId>
-			<artifactId>DAM1_M03_UF3_POO_Shop5.0</artifactId>
+			<groupId>com.example</groupId>
+			<artifactId>dam2_m13_spring</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

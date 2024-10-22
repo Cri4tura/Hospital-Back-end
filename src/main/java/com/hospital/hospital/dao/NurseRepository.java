@@ -2,7 +2,9 @@ package com.hospital.hospital.dao;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import entity.Nurse;
 
@@ -11,5 +13,9 @@ import entity.Nurse;
 
 
 public interface NurseRepository extends CrudRepository<Nurse, Integer> {
-	 Optional<Nurse> findByName(String name);  
-}
+	 Optional<Nurse> findByName(String name);
+	 
+	 @Query("SELECT n FROM Nurse n WHERE n.name = :name AND n.password = :password")
+	    Optional<Nurse> validateLogin(@Param("name") String name, @Param("password") String password);
+	}
+
