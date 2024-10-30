@@ -40,4 +40,14 @@ public class NurseController {
 	public @ResponseBody Optional<Nurse> findByName(@PathVariable("name") String name){
 		return nurseRepository.findByName(name);
 	}
+	
+	@PostMapping("/create")
+	public @ResponseBody String createNurse(@RequestParam String name, @RequestParam String password) {
+
+		Nurse n = new Nurse();
+		n.setName(name);
+		n.setPassword(password);
+		nurseRepository.save(n);
+		return "Saved";
+	}
 }
