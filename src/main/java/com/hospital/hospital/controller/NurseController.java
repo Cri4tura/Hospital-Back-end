@@ -78,5 +78,18 @@ public class NurseController {
 					.body("An error occurred while saving the nurse");
 		}
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Nurse> findById(@PathVariable("id") int id) {
+	    Optional<Nurse> nurse = nurseRepository.findById(id);
+
+	    if (nurse.isPresent()) {
+	    	// 200 OK si se encuentra la enfermera
+	        return ResponseEntity.ok(nurse.get());  
+	    } else {
+	    	// 404 Not Found si no se encuentra la enfermera
+	        return ResponseEntity.notFound().build(); 
+	    }
+	}
 
 }
