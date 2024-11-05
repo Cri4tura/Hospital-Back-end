@@ -24,9 +24,17 @@ public class NurseController {
 	private NurseRepository nurseRepository;
 
 	@GetMapping("/index")
-	public @ResponseBody Iterable<Nurse> getAll() {
-		return nurseRepository.findAll();
+	public ResponseEntity<Iterable<Nurse>> getAll() {
+	    Iterable<Nurse> nurses = nurseRepository.findAll();
+
+	    if (!nurses.iterator().hasNext())
+	        // 204 No Content si no hay registros
+	        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+	    // 200 OK si se encuentran registros
+	    return ResponseEntity.ok(nurses);
 	}
+
 
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestParam String name, @RequestParam String password) {
@@ -45,8 +53,6 @@ public class NurseController {
 	    // 200 OK si el login es exitoso
 	    return ResponseEntity.ok("Login successful");
 	}
-
-
 
 	@GetMapping("/name/{name}")
 	public @ResponseBody Optional<Nurse> findByName(@PathVariable("name") String name) {
