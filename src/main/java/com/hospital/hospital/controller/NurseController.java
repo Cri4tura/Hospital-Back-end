@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.hospital.dao.NurseRepository;
@@ -55,9 +54,18 @@ public class NurseController {
 	}
 
 	@GetMapping("/name/{name}")
-	public @ResponseBody Optional<Nurse> findByName(@PathVariable("name") String name) {
-		return nurseRepository.findByName(name);
+	public ResponseEntity<Optional<Nurse>> findByName(@PathVariable("name") String name) {
+	    Optional<Nurse> nurse = nurseRepository.findByName(name);
+	    
+	    if (nurse.isPresent()) {
+	    	// 200 OK si encuentra el nombre
+	        return ResponseEntity.ok(nurse);
+	    } else {
+	    	// 404 NOT FOUND si no ecuentra el nombre
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
 	}
+
 
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestParam String name, @RequestParam String password) {
