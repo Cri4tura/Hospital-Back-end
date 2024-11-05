@@ -93,7 +93,7 @@ public class NurseController {
 		}
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("id/{id}")
 	public ResponseEntity<Nurse> findById(@PathVariable("id") int id) {
 	    Optional<Nurse> nurse = nurseRepository.findById(id);
 
