@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -105,5 +106,43 @@ public class NurseController {
 	        return ResponseEntity.notFound().build(); 
 	    }
 	}
+	
+	
+	@PutMapping("/update/{id}")
+	public ResponseEntity<String> updateNurse(
+	        @PathVariable("id") int id, 
+	        @RequestParam String name, 
+	        @RequestParam String password) {
+
+	    // Validar los datos de entrada
+	    if (name == null || name.isEmpty()) {
+	        return ResponseEntity.badRequest().body("Name cannot be empty");
+	    }
+	    if (password == null || password.isEmpty()) {
+	        return ResponseEntity.badRequest().body("Password cannot be empty");
+	    }
+
+	    // Verificar si el Nurse existe
+	    Optional<Nurse> existingNurseOpt = nurseRepository.findById(id);
+	    
+	    if (!existingNurseOpt.isPresent()) {
+	        // 404 Not Found si el Nurse no existe
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+	    }
+
+	    // Obtener el Nurse existente
+	    Nurse existingNurse = existingNurseOpt.get();
+	    
+	    // Actualizar los campos del Nurse
+	    existingNurse.setName(name);
+	    existingNurse.setPassword(password);
+	    
+	    // Guardar el Nurse actualizado
+	    nurseRepository.save(existingNurse);
+
+	    // 200 OK si la actualización es exitosa
+	    return ResponseEntity.ok("Nurse updated successfully");
+	}
+
 
 }
