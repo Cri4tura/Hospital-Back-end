@@ -3,6 +3,9 @@ package com.hospital.hospital.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,5 +42,15 @@ public class NurseController {
 	@GetMapping("/name/{name}")
 	public @ResponseBody Optional<Nurse> findByName(@PathVariable("name") String name){
 		return nurseRepository.findByName(name);
+	}
+	
+	@DeleteMapping("/remove/{id}")
+	public ResponseEntity<String> deleteById(@PathVariable("id") int id) {
+		if (nurseRepository.existsById(id)) {
+			nurseRepository.deleteById(id);
+			return ResponseEntity.ok("Eliminado correctamente");
+		}else {
+			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No encontrado");
+		}
 	}
 }
