@@ -38,35 +38,51 @@ Prerequisites
      spring.datasource.username=your-username
      spring.datasource.password=your-password
      spring.jpa.hibernate.ddl-auto=update
- 
+4. **Install dependencies:**
+    ```bash
+   mvn install
+5. **Run the application:**
+    ```bash
+   mvn spring-boot:run
+    
+## **Usage**
+**Endpoints Overview**
+
+The following endpoints are available for the Nurse entity:
+
+1. **Get All Nurses**
+   - **Endpoint:** `GET /nurse/all`
+   - **Description:** Retrieves a list of all registered nurses.
+
+2. **Login Validation**
+   - **Endpoint:** `POST /nurse/login`
+   - **Description:** Authenticates a nurse’s login credentials.
+
+3. **Search Nurse by Name**
+   - **Endpoint:** `GET /nurse/name/{name}`
+   - **Description:** Returns nurse(s) with the specified name.
+
+4. **CRUD Operations for Nurse**
+   - **Create Nurse:** `POST /nurse/create`
+   - **Read Nurse by ID:** `GET /nurse/{id}`
+   - **Update Nurse by ID:** `PUT /nurse/{id}`
+   - **Delete Nurse by ID:** `DELETE /nurse/{id}`
+
+**Testing**
+ - **Postman:** Use Postman to test each endpoint and validate response data.
+ - **CI Pipeline:** The CI pipeline will automatically run unit tests upon code push to ensure quality.
+
+## **Continuous Integration (CI)**
+
+- **GitHub Actions** is configured to automate the testing process.
+  - On every push and pull request, unit tests are triggered to check the code.
+  - Failed tests will notify contributors, ensuring prompt fixes.
+  - The CI pipeline will detect syntax errors and logic errors during testing.
 
 ## **Contributing**
 
-If you'd like to contribute to Project Title, here are some guidelines:
+This project follows a group collaboration model. Each contributor should work on a designated branch and submit changes via pull requests. All changes are reviewed for integration into the main branch.
 
-1. Fork the repository.
-2. Create a new branch for your changes.
-3. Make your changes.
-4. Write tests to cover your changes.
-5. Run the tests to ensure they pass.
-6. Commit your changes.
-7. Push your changes to your forked repository.
-8. Submit a pull request.
-
-## **License**
-
-Project Title is released under the MIT License. See the **[LICENSE](https://www.blackbox.ai/share/LICENSE)** file for details.
-
-## **Authors and Acknowledgment**
-
-Project Title was created by **[Your Name](https://github.com/username)**.
-
-Additional contributors include:
-
-- **[Contributor Name](https://github.com/contributor-name)**
-- **[Another Contributor](https://github.com/another-contributor)**
-
-Thank you to all the contributors for their hard work and dedication to the project.
 
 
 
