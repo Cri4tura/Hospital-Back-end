@@ -18,7 +18,7 @@ Prerequisites
 - **MySQL:** or local or remote database hosting. 
 - **Maven:**  for managing dependencies
 - **Git** for version control
-- **POSTMAN** for create and share API requests and collections, automate testing, mock APIs, and monitor performance.
+- **Postman** for create and share API requests and collections, automate testing, mock APIs, and monitor performance.
 - **Springboot** for software engineers developing web apps and microservices. 
 
 ## **Steps**
@@ -47,7 +47,7 @@ Prerequisites
 The following endpoints are available for the Nurse entity:
 
 1. **Get All Nurses**
-   - **Endpoint:** `GET /nurse/index`
+   - **Endpoint:** `GET /nurse`
    - **Description:** Retrieves a list of all registered nurses.
 
 2. **Login Validation**
@@ -59,10 +59,10 @@ The following endpoints are available for the Nurse entity:
    - **Description:** Returns nurse(s) with the specified name.
 
 4. **CRUD Operations for Nurse**
-   - **Create Nurse:** `POST /nurse/register`
+   - **Create Nurse:** `POST /nurse/signin`
    - **Read Nurse by ID:** `GET /nurse/id/{id}`
-   - **Update Nurse by ID:** `PUT /nurse/update/{id}`
-   - **Delete Nurse by ID:** `DELETE /nurse/remove/{id}`
+   - **Update Nurse by ID:** `PUT /nurse/{id}`
+   - **Delete Nurse by ID:** `DELETE /nurse/{id}`
 
 **Testing**
  - **Postman:** Use Postman to test each endpoint and validate response data.
