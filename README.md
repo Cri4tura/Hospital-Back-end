@@ -18,12 +18,14 @@ Prerequisites
 - **MySQL:** or local or remote database hosting. 
 - **Maven:**  for managing dependencies
 - **Git** for version control
+- **Postman** for create and share API requests and collections, automate testing, mock APIs, and monitor performance.
+- **Springboot** for software engineers developing web apps and microservices. 
 
 ## **Steps**
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   git clone https://github.com/Cri4tura/Hospital-Back-end.git
    cd your-repo-name
    
 2. **Configure MySQL Database:**
@@ -38,20 +40,14 @@ Prerequisites
      spring.datasource.username=your-username
      spring.datasource.password=your-password
      spring.jpa.hibernate.ddl-auto=update
-4. **Install dependencies:**
-    ```bash
-   mvn install
-5. **Run the application:**
-    ```bash
-   mvn spring-boot:run
-    
+        
 ## **Usage**
 **Endpoints Overview**
 
 The following endpoints are available for the Nurse entity:
 
 1. **Get All Nurses**
-   - **Endpoint:** `GET /nurse/all`
+   - **Endpoint:** `GET /nurse`
    - **Description:** Retrieves a list of all registered nurses.
 
 2. **Login Validation**
@@ -63,8 +59,8 @@ The following endpoints are available for the Nurse entity:
    - **Description:** Returns nurse(s) with the specified name.
 
 4. **CRUD Operations for Nurse**
-   - **Create Nurse:** `POST /nurse/create`
-   - **Read Nurse by ID:** `GET /nurse/{id}`
+   - **Create Nurse:** `POST /nurse/signin`
+   - **Read Nurse by ID:** `GET /nurse/id/{id}`
    - **Update Nurse by ID:** `PUT /nurse/{id}`
    - **Delete Nurse by ID:** `DELETE /nurse/{id}`
 
