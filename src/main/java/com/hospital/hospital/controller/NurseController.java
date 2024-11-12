@@ -26,7 +26,7 @@ public class NurseController {
 	@Autowired
 	private NurseRepository nurseRepository;
 
-	@GetMapping("/index")
+	@GetMapping
 	public ResponseEntity<Iterable<Nurse>> getAll() {
 	    Iterable<Nurse> nurses = nurseRepository.findAll();
 
@@ -37,8 +37,33 @@ public class NurseController {
 	    // 200 OK si se encuentran registros
 	    return ResponseEntity.ok(nurses);
 	}
+	
+	@GetMapping("id/{id}")
+	public ResponseEntity<Nurse> findById(@PathVariable("id") int id) {
+	    Optional<Nurse> nurse = nurseRepository.findById(id);
 
+	    if (nurse.isPresent()) {
+	    	// 200 OK si se encuentra la enfermera
+	        return ResponseEntity.ok(nurse.get());  
+	    } else {
+	    	// 404 Not Found si no se encuentra la enfermera
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
+	}
 
+	@GetMapping("name/{name}")
+	public ResponseEntity<Optional<Nurse>> findByName(@PathVariable("name") String name) {
+	    Optional<Nurse> nurse = nurseRepository.findByName(name);
+	    
+	    if (nurse.isPresent()) {
+	    	// 200 OK si encuentra el nombre
+	        return ResponseEntity.ok(nurse);
+	    } else {
+	    	// 404 NOT FOUND si no ecuentra el nombre
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
+	}
+	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestParam String name, @RequestParam String password) {
 	    // Verificar si el usuario existe
@@ -57,21 +82,7 @@ public class NurseController {
 	    return ResponseEntity.ok("Login successful");
 	}
 
-	@GetMapping("/name/{name}")
-	public ResponseEntity<Optional<Nurse>> findByName(@PathVariable("name") String name) {
-	    Optional<Nurse> nurse = nurseRepository.findByName(name);
-	    
-	    if (nurse.isPresent()) {
-	    	// 200 OK si encuentra el nombre
-	        return ResponseEntity.ok(nurse);
-	    } else {
-	    	// 404 NOT FOUND si no ecuentra el nombre
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	    }
-	}
-
-
-	@PostMapping("/register")
+	@PostMapping("/signin")
 	public ResponseEntity<String> register(@RequestParam String name, @RequestParam String password) {
 		try {
 			// Validación de campos
@@ -97,21 +108,7 @@ public class NurseController {
 		}
 	}
 	
-	@GetMapping("id/{id}")
-	public ResponseEntity<Nurse> findById(@PathVariable("id") int id) {
-	    Optional<Nurse> nurse = nurseRepository.findById(id);
-
-	    if (nurse.isPresent()) {
-	    	// 200 OK si se encuentra la enfermera
-	        return ResponseEntity.ok(nurse.get());  
-	    } else {
-	    	// 404 Not Found si no se encuentra la enfermera
-	        return ResponseEntity.notFound().build(); 
-	    }
-	}
-	
-	
-	@PutMapping("/update/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<String> updateNurse(
 	        @PathVariable("id") int id, 
 	        @RequestParam String name, 
@@ -147,13 +144,13 @@ public class NurseController {
 	    return ResponseEntity.ok("Nurse updated successfully");
 	}
 
-	@DeleteMapping("/remove/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteById(@PathVariable("id") int id) {
 		if (nurseRepository.existsById(id)) {
 			nurseRepository.deleteById(id);
-			return ResponseEntity.ok("Eliminado correctamente");
+			return ResponseEntity.ok("Nurse deleted successfully");
 		}else {
-			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No encontrado");
+			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
 		}
 	}
 
