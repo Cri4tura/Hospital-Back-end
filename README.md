@@ -22,11 +22,7 @@ Prerequisites
 - **Springboot** for software engineers developing web apps and microservices. 
 
 ## **Steps**
-0. **Dwonload Springboots proyect:**
-   Official Web
-   ```bash
-   https://spring.io/quickstart
-   
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Cri4tura/Hospital-Back-end.git
@@ -44,14 +40,6 @@ Prerequisites
      spring.datasource.username=your-username
      spring.datasource.password=your-password
      spring.jpa.hibernate.ddl-auto=update
-4. **Install dependencies:**
-   Examples to add dependencies in  `pom.xml`
-    ```bash
-   <dependency>
-      <groupId>network.quant</groupId>
-      <artifactId>overledger-sdk-bundle</artifactId>
-      <version>1.0.0-alpha.2</version>
-    </dependency>
         
 ## **Usage**
 **Endpoints Overview**
