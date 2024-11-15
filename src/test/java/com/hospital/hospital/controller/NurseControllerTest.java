@@ -77,7 +77,7 @@ class NurseControllerTest {
 		when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/nurse/name/Jane Doe")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value("Jane Doe"));
+				.andExpect(jsonPath("$.name").value("Jane Do"));
 	}
 
 	@Test
