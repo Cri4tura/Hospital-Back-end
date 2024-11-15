@@ -2,7 +2,7 @@ name: Run Spring Boot Tests
 
 on:
   push:
-    branches:
+    branches-ignore:
       - main  # O especifica la rama que prefieras
   pull_request: # Opcional: para ejecutar las pruebas en pull requests
     branches:
