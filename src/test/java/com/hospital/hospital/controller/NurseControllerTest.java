@@ -3,6 +3,7 @@ package com.hospital.hospital.controller;
 import com.hospital.hospital.dao.NurseRepository;
 import entity.Nurse;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,162 +22,163 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(NurseController.class)
 class NurseControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private NurseRepository nurseRepository;
+	@MockBean
+	private NurseRepository nurseRepository;
 
-    // 1. Test endpoint getAll()
-    @Test
-    void testGetAllNurses_withData() throws Exception {
-        Nurse nurse = new Nurse();
-        nurse.setId(1);
-        nurse.setName("John Doe");
+	// 1. Test endpoint getAll()
+	@Test
+	void testGetAllNurses_withData() throws Exception {
+		Nurse nurse = new Nurse();
+		nurse.setId(1);
+		nurse.setName("John Doe");
 
-        when(nurseRepository.findAll()).thenReturn(Collections.singletonList(nurse));
+		when(nurseRepository.findAll()).thenReturn(Collections.singletonList(nurse));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/nurse"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("John Doe"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.get("/nurse")).andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].name").value("John Doe"));
+	}
 
-    @Test
-    void testGetAllNurses_noData() throws Exception {
-        when(nurseRepository.findAll()).thenReturn(Collections.emptyList());
+	@Test
+	void testGetAllNurses_noData() throws Exception {
+		when(nurseRepository.findAll()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/nurse"))
-                .andExpect(status().isNoContent());
-    }
+		mockMvc.perform(MockMvcRequestBuilders.get("/nurse")).andExpect(status().isNoContent());
+	}
 
-    // 2. Test endpoint findById()
-    @Test
-    void testFindNurseById_found() throws Exception {
-        Nurse nurse = new Nurse();
-        nurse.setId(1);
-        nurse.setName("John Doe");
+	// 2. Test endpoint findById()
+	@Test
+	void testFindNurseById_found() throws Exception {
+		Nurse nurse = new Nurse();
+		nurse.setId(1);
+		nurse.setName("John Doe");
 
-        when(nurseRepository.findById(1)).thenReturn(Optional.of(nurse));
+		when(nurseRepository.findById(1)).thenReturn(Optional.of(nurse));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/nurse/id/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("John Doe"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.get("/nurse/id/1")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value("John Doe"));
+	}
 
-    @Test
-    void testFindNurseById_notFound() throws Exception {
-        when(nurseRepository.findById(anyInt())).thenReturn(Optional.empty());
+	@Test
+	void testFindNurseById_notFound() throws Exception {
+		when(nurseRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/nurse/id/1"))
-                .andExpect(status().isNotFound());
-    }
+		mockMvc.perform(MockMvcRequestBuilders.get("/nurse/id/1")).andExpect(status().isNotFound());
+	}
 
-    // 3. Test endpoint findByName()
-    @Test
-    void testFindNurseByName_found() throws Exception {
-        Nurse nurse = new Nurse();
-        nurse.setName("Jane Doe");
+	// 3. Test endpoint findByName()
+	@Test
+	void testFindNurseByName_found() throws Exception {
+		Nurse nurse = new Nurse();
+		nurse.setName("Jane Doe");
 
-        when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
+		when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/nurse/name/Jane Doe"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Jane Doe"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.get("/nurse/name/Jane Doe")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value("Jane Doe"));
+	}
 
-    @Test
-    void testFindNurseByName_notFound() throws Exception {
-        when(nurseRepository.findByName(anyString())).thenReturn(Optional.empty());
+	@Test
+	void testFindNurseByName_notFound() throws Exception {
+		when(nurseRepository.findByName(anyString())).thenReturn(Optional.empty());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/nurse/name/NonExistent"))
-                .andExpect(status().isNotFound());
-    }
+		mockMvc.perform(MockMvcRequestBuilders.get("/nurse/name/NonExistent")).andExpect(status().isNotFound());
+	}
 
-    // 4. Test endpoint login()
-    @Test
-    void testLogin_successful() throws Exception {
-        Nurse nurse = new Nurse();
-        nurse.setName("Jane Doe");
-        nurse.setPassword("password");
+	// 4. Test endpoint login()
+	@Test
+	void testLogin_successful() throws Exception {
+		Nurse nurse = new Nurse();
+		nurse.setName("Jane Doe");
+		nurse.setPassword("password");
 
-        when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
+		when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/nurse/login")
-                        .param("name", "Jane Doe")
-                        .param("password", "password")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Login successful"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/login").param("name", "Jane Doe")
+				.param("password", "password").contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isOk()).andExpect(content().string("Login successful"));
+	}
 
-    @Test
-    void testLogin_invalidPassword() throws Exception {
-        Nurse nurse = new Nurse();
-        nurse.setName("Jane Doe");
-        nurse.setPassword("correctPassword");
+	@Test
+	void testLogin_invalidPassword() throws Exception {
+		Nurse nurse = new Nurse();
+		nurse.setName("Jane Doe");
+		nurse.setPassword("correctPassword");
 
-        when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
+		when(nurseRepository.findByName("Jane Doe")).thenReturn(Optional.of(nurse));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/nurse/login")
-                        .param("name", "Jane Doe")
-                        .param("password", "wrongPassword")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().string("Invalid password"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/login").param("name", "Jane Doe")
+				.param("password", "wrongPassword").contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isUnauthorized()).andExpect(content().string("Invalid password"));
+	}
 
-    @Test
-    void testLogin_userNotFound() throws Exception {
-        when(nurseRepository.findByName(anyString())).thenReturn(Optional.empty());
+	@Test
+	void testLogin_userNotFound() throws Exception {
+		when(nurseRepository.findByName(anyString())).thenReturn(Optional.empty());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/nurse/login")
-                        .param("name", "NonExistent")
-                        .param("password", "password")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Nurse not found"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/login").param("name", "NonExistent")
+				.param("password", "password").contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isNotFound()).andExpect(content().string("Nurse not found"));
+	}
 
-    // 5. Test endpoint signin()
-    @Test
-    void testRegister_successful() throws Exception {
-        when(nurseRepository.existsByName("New Nurse")).thenReturn(false);
+	// 5. Test endpoint signin()
+	@Test
+	void testRegister_successful() throws Exception {
+		when(nurseRepository.existsByName("New Nurse")).thenReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
-                        .param("name", "New Nurse")
-                        .param("password", "password123")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Saved"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "New Nurse")
+				.param("password", "password123").contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isOk()).andExpect(content().string("Saved"));
+	}
 
-    @Test
-    void testRegister_existingNurse() throws Exception {
-        when(nurseRepository.existsByName("Existing Nurse")).thenReturn(true);
+	@Test
+	void testRegister_existingNurse() throws Exception {
+		when(nurseRepository.existsByName("Existing Nurse")).thenReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
-                        .param("name", "Existing Nurse")
-                        .param("password", "password123")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isConflict())
-                .andExpect(content().string("Nurse with this name already exists"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "Existing Nurse")
+				.param("password", "password123").contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isConflict()).andExpect(content().string("Nurse with this name already exists"));
+	}
 
-    // 6. Test endpoint updateNurse()
-    @Test
-    void testUpdateNurse_successful() throws Exception {
-        Nurse nurse = new Nurse();
-        nurse.setId(1);
-        nurse.setName("Jane Doe");
+	@Test
+	void testRegister_emptyFields() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "").param("password", "")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)).andExpect(status().isBadRequest())
+				.andExpect(content().string("Name and password cannot be empty"));
+	}
 
-        when(nurseRepository.findById(1)).thenReturn(Optional.of(nurse));
+	@Test
+	void testRegister_internalServerError() throws Exception {
+		when(nurseRepository.existsByName("Error Nurse")).thenReturn(false);
+		Mockito.doThrow(new RuntimeException("Database error")).when(nurseRepository).save(Mockito.any(Nurse.class));
 
+		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "Error Nurse")
+				.param("password", "password123").contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isInternalServerError())
+				.andExpect(content().string("An error occurred while saving the nurse"));
+	}
+
+	// 6. Test endpoint updateNurse()
+	@Test
+    void testUpdateNurse_emptyName() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/nurse/1")
-                        .param("name", "Updated Name")
-                        .param("password", "newPassword")
+                        .param("name", "")
+                        .param("password", "password123")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Nurse updated successfully"));
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Name cannot be empty"));
+    }
+
+    @Test
+    void testUpdateNurse_emptyPassword() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/nurse/1")
+                        .param("name", "Updated Nurse")
+                        .param("password", "")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Password cannot be empty"));
     }
 
     @Test
@@ -184,29 +186,44 @@ class NurseControllerTest {
         when(nurseRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders.put("/nurse/1")
-                        .param("name", "NonExistent")
-                        .param("password", "password")
+                        .param("name", "Updated Nurse")
+                        .param("password", "password123")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Nurse not found"));
     }
 
-    // 7. Test endpoint deleteById()
     @Test
-    void testDeleteNurse_successful() throws Exception {
-        when(nurseRepository.existsById(1)).thenReturn(true);
+    void testUpdateNurse_successful() throws Exception {
+        Nurse existingNurse = new Nurse();
+        existingNurse.setId(1);
+        existingNurse.setName("Original Nurse");
+        existingNurse.setPassword("oldPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/nurse/1"))
+        when(nurseRepository.findById(1)).thenReturn(Optional.of(existingNurse));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/nurse/1")
+                        .param("name", "Updated Nurse")
+                        .param("password", "newPassword123")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Nurse deleted successfully"));
+                .andExpect(content().string("Nurse updated successfully"));
     }
 
-    @Test
-    void testDeleteNurse_notFound() throws Exception {
-        when(nurseRepository.existsById(anyInt())).thenReturn(false);
+	// 7. Test endpoint deleteById()
+	@Test
+	void testDeleteNurse_successful() throws Exception {
+		when(nurseRepository.existsById(1)).thenReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/nurse/1"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Nurse not found"));
-    }
+		mockMvc.perform(MockMvcRequestBuilders.delete("/nurse/1")).andExpect(status().isOk())
+				.andExpect(content().string("Nurse deleted successfully"));
+	}
+
+	@Test
+	void testDeleteNurse_notFound() throws Exception {
+		when(nurseRepository.existsById(anyInt())).thenReturn(false);
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/nurse/1")).andExpect(status().isNotFound())
+				.andExpect(content().string("Nurse not found"));
+	}
 }
