@@ -60,7 +60,7 @@ class NurseControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/nurse/id/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("John"));
+                .andExpect(jsonPath("$.name").value("John Doe"));
     }
 
     @Test
