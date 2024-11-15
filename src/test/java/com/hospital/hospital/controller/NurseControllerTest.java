@@ -1,10 +1,8 @@
 package com.hospital.hospital.controller;
 
-import com.hospital.hospital.controller.NurseController;
 import com.hospital.hospital.dao.NurseRepository;
 import entity.Nurse;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
