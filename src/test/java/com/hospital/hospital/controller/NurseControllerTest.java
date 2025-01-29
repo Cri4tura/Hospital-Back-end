@@ -35,7 +35,7 @@ class NurseControllerTest {
 		nurse.setId(1);
 		nurse.setName("John Doe");
 
-		when(nurseRepository.findAll()).thenReturn(Collections.singletonList(nurse));
+		//when(nurseRepository.findAll()).thenReturn(Collections.singletonList(nurse));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/nurse")).andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].name").value("John Doe"));
@@ -43,7 +43,7 @@ class NurseControllerTest {
 
 	@Test
 	void testGetAllNurses_noData() throws Exception {
-		when(nurseRepository.findAll()).thenReturn(Collections.emptyList());
+		//when(nurseRepository.findAll()).thenReturn(Collections.emptyList());
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/nurse")).andExpect(status().isNoContent());
 	}
@@ -126,38 +126,74 @@ class NurseControllerTest {
 	// 5. Test endpoint signin()
 	@Test
 	void testRegister_successful() throws Exception {
-		when(nurseRepository.existsByName("New Nurse")).thenReturn(false);
+	    when(nurseRepository.existsByEmail("newnurse@example.com")).thenReturn(false);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "New Nurse")
-				.param("password", "password123").contentType(MediaType.APPLICATION_FORM_URLENCODED))
-				.andExpect(status().isOk()).andExpect(content().string("Saved"));
+	    mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
+	            .param("name", "New")
+	            .param("surname", "Nurse")
+	            .param("email", "newnurse@example.com")
+	            .param("password", "password123")
+	            .param("birth_date", "1990-01-01")
+	            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("Saved"));
 	}
 
 	@Test
 	void testRegister_existingNurse() throws Exception {
-		when(nurseRepository.existsByName("Existing Nurse")).thenReturn(true);
+	    when(nurseRepository.existsByEmail("existingnurse@example.com")).thenReturn(true);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "Existing Nurse")
-				.param("password", "password123").contentType(MediaType.APPLICATION_FORM_URLENCODED))
-				.andExpect(status().isConflict()).andExpect(content().string("Nurse with this name already exists"));
+	    mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
+	            .param("name", "Existing")
+	            .param("surname", "Nurse")
+	            .param("email", "existingnurse@example.com")
+	            .param("password", "password123")
+	            .param("birth_date", "1990-01-01")
+	            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+	            .andExpect(status().isConflict())
+	            .andExpect(content().string("Nurse with this email already exists"));
 	}
 
 	@Test
 	void testRegister_emptyFields() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "").param("password", "")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)).andExpect(status().isBadRequest())
-				.andExpect(content().string("Name and password cannot be empty"));
+	    mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
+	            .param("name", "")
+	            .param("surname", "")
+	            .param("email", "")
+	            .param("password", "")
+	            .param("birth_date", "")
+	            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+	            .andExpect(status().isBadRequest())
+	            .andExpect(content().string("Name cannot be empty"));
+	}
+
+	@Test
+	void testRegister_invalidBirthDate() throws Exception {
+	    mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
+	            .param("name", "Test")
+	            .param("surname", "User")
+	            .param("email", "test@example.com")
+	            .param("password", "password123")
+	            .param("birth_date", "invalid-date")
+	            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+	            .andExpect(status().isBadRequest())
+	            .andExpect(content().string("Invalid birth date format"));
 	}
 
 	@Test
 	void testRegister_internalServerError() throws Exception {
-		when(nurseRepository.existsByName("Error Nurse")).thenReturn(false);
-		Mockito.doThrow(new RuntimeException("Database error")).when(nurseRepository).save(Mockito.any(Nurse.class));
+	    when(nurseRepository.existsByEmail("errornurse@example.com")).thenReturn(false);
+	    Mockito.doThrow(new RuntimeException("Database error")).when(nurseRepository).save(Mockito.any(Nurse.class));
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin").param("name", "Error Nurse")
-				.param("password", "password123").contentType(MediaType.APPLICATION_FORM_URLENCODED))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().string("An error occurred while saving the nurse"));
+	    mockMvc.perform(MockMvcRequestBuilders.post("/nurse/signin")
+	            .param("name", "Error")
+	            .param("surname", "Nurse")
+	            .param("email", "errornurse@example.com")
+	            .param("password", "password123")
+	            .param("birth_date", "1990-01-01")
+	            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+	            .andExpect(status().isInternalServerError())
+	            .andExpect(content().string("An error occurred while saving the nurse"));
 	}
 
 	// 6. Test endpoint updateNurse()

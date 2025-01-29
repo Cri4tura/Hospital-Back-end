@@ -19,10 +19,10 @@ public class Nurse {
     private String password;
 
     @Temporal(TemporalType.DATE)
-    private Date birthDate;
+    private Date birth_date;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date registerDate = new Date();
+    private Date register_date = new Date();
 
     // Getters and Setters
     public int getId() {
@@ -64,16 +64,16 @@ public class Nurse {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public Date getBirthDate() {
-        return birthDate;
+        return birth_date;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(Date birth_date) {
+        this.birth_date = birth_date;
     }
 
     public Date getRegisterDate() {
-        return registerDate;
+        return register_date;
     }
 }
