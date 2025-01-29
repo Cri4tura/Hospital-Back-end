@@ -1,6 +1,7 @@
 package com.hospital.hospital.controller;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.hospital.dao.NurseRepository;
 import entity.Nurse;
+import entity.NurseResponse;
 
 @RestController
 @RequestMapping("/nurse")
@@ -28,17 +30,17 @@ public class NurseController {
 	private NurseRepository nurseRepository;
 
 	@GetMapping
-	public ResponseEntity<Iterable<Nurse>> getAll() {
-		Iterable<Nurse> nurses = nurseRepository.findAll();
-
-		if (!nurses.iterator().hasNext())
-			// 204 No Content si no hay registros
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-		// 200 OK si se encuentran registros
-		return ResponseEntity.ok(nurses);
-	}
-
+    public ResponseEntity<NurseResponse> getAll() {
+        List<Nurse> nurses = (List<Nurse>) nurseRepository.findAll();
+ 
+        if (nurses.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+ 
+        // Retorna un objeto JSON con los datos
+        return ResponseEntity.ok(new NurseResponse("success", nurses.size(), nurses));
+    }
+	
 	@GetMapping("id/{id}")
 	public ResponseEntity<Nurse> findById(@PathVariable("id") int id) {
 		Optional<Nurse> nurse = nurseRepository.findById(id);
