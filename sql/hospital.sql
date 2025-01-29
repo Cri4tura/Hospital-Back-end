@@ -15,7 +15,7 @@ CREATE TABLE Nurse (
 );
 
 INSERT INTO Nurse (name, surname, email, password, birth_date, register_date) VALUES
-('Ana', 'Martínez', 'ana.martinez@example.com', 'password123', '1990-03-12', '2023-05-01'),
+('Ana', 'Martínez', 'test@gmail.com', '1234', '1990-03-12', '2023-05-01'),
 ('Luis', 'Gómez', 'luis.gomez@example.com', 'password123', '1985-06-24', '2023-05-02'),
 ('Carla', 'Pérez', 'carla.perez@example.com', 'password123', '1992-09-15', '2023-05-03'),
 ('José', 'López', 'jose.lopez@example.com', 'password123', '1988-02-18', '2023-05-04'),
