@@ -117,8 +117,8 @@ public class NurseController {
 			// Crear y guardar la entidad
 			Nurse n = new Nurse();
 			n.setName(name);
-			n.setSurname(password);
-			n.setEmail(name);
+			n.setSurname(surname);
+			n.setEmail(email);
 			n.setPassword(password);
 			n.setBirthDate(birth_date);
 			nurseRepository.save(n);
