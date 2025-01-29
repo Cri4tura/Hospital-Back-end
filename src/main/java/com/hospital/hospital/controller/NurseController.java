@@ -1,5 +1,6 @@
 package com.hospital.hospital.controller;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,75 +29,96 @@ public class NurseController {
 
 	@GetMapping
 	public ResponseEntity<Iterable<Nurse>> getAll() {
-	    Iterable<Nurse> nurses = nurseRepository.findAll();
+		Iterable<Nurse> nurses = nurseRepository.findAll();
 
-	    if (!nurses.iterator().hasNext())
-	        // 204 No Content si no hay registros
-	        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		if (!nurses.iterator().hasNext())
+			// 204 No Content si no hay registros
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
-	    // 200 OK si se encuentran registros
-	    return ResponseEntity.ok(nurses);
+		// 200 OK si se encuentran registros
+		return ResponseEntity.ok(nurses);
 	}
-	
+
 	@GetMapping("id/{id}")
 	public ResponseEntity<Nurse> findById(@PathVariable("id") int id) {
-	    Optional<Nurse> nurse = nurseRepository.findById(id);
+		Optional<Nurse> nurse = nurseRepository.findById(id);
 
-	    if (nurse.isPresent()) {
-	    	// 200 OK si se encuentra la enfermera
-	        return ResponseEntity.ok(nurse.get());  
-	    } else {
-	    	// 404 Not Found si no se encuentra la enfermera
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	    }
+		if (nurse.isPresent()) {
+			// 200 OK si se encuentra la enfermera
+			return ResponseEntity.ok(nurse.get());  
+		} else {
+			// 404 Not Found si no se encuentra la enfermera
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
 
 	@GetMapping("name/{name}")
 	public ResponseEntity<Optional<Nurse>> findByName(@PathVariable("name") String name) {
-	    Optional<Nurse> nurse = nurseRepository.findByName(name);
-	    
-	    if (nurse.isPresent()) {
-	    	// 200 OK si encuentra el nombre
-	        return ResponseEntity.ok(nurse);
-	    } else {
-	    	// 404 NOT FOUND si no ecuentra el nombre
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	    }
+		Optional<Nurse> nurse = nurseRepository.findByName(name);
+
+		if (nurse.isPresent()) {
+			// 200 OK si encuentra el nombre
+			return ResponseEntity.ok(nurse);
+		} else {
+			// 404 NOT FOUND si no ecuentra el nombre
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
-	
+
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestParam String name, @RequestParam String password) {
-	    // Verificar si el usuario existe
-	    Optional<Nurse> nurse = nurseRepository.findByName(name);
-	    
-	    if (!nurse.isPresent()) 
-	        // 404 Not Found si el nombre de usuario no existe en la base de datos
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+		// Verificar si el usuario existe
+		Optional<Nurse> nurse = nurseRepository.findByName(name);
 
-	    // Verificar si la contraseña coincide
-	    if (!nurse.get().getPassword().equals(password)) 
-	        // 401 Unauthorized si el nombre existe pero la contraseña es incorrecta
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+		if (!nurse.isPresent()) 
+			// 404 Not Found si el nombre de usuario no existe en la base de datos
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
 
-	    // 200 OK si el login es exitoso
-	    return ResponseEntity.ok("Login successful");
+		// Verificar si la contraseña coincide
+		if (!nurse.get().getPassword().equals(password)) 
+			// 401 Unauthorized si el nombre existe pero la contraseña es incorrecta
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+
+		// 200 OK si el login es exitoso
+		return ResponseEntity.ok("Login successful");
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<String> register(@RequestParam String name, @RequestParam String password) {
+	public ResponseEntity<String> register(@RequestParam String name, @RequestParam String surname,
+			@RequestParam String password, @RequestParam String email, @RequestParam Date birth_date) {
 		try {
-			// Validación de campos
-			if (name == null || name.isEmpty() || password == null || password.isEmpty())
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name and password cannot be empty");
+			// Validación de campos si alguno está vacío
+			if (name == null || name.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name cannot be empty");
+			} 
+			
+			if (surname == null || surname.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Surname cannot be empty");
+			} 
+			
+			if (email == null || email.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email cannot be empty");
+			} 
 
-			// Comprobar si el nombre de usuario ya existe
-			if (nurseRepository.existsByName(name))
-				return ResponseEntity.status(HttpStatus.CONFLICT).body("Nurse with this name already exists");
+			if (password == null || password.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be empty");
+			}  
+
+			if (birth_date == null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Birth date cannot be empty");
+			} 
+
+			// Comprobar si el email ya está registrado
+			if (nurseRepository.existsByEmail(email))
+				return ResponseEntity.status(HttpStatus.CONFLICT).body("Nurse with this email already exists");
 
 			// Crear y guardar la entidad
 			Nurse n = new Nurse();
 			n.setName(name);
+			n.setSurname(password);
+			n.setEmail(name);
 			n.setPassword(password);
+			n.setBirthDate(birth_date);
 			nurseRepository.save(n);
 
 			return ResponseEntity.ok("Saved");
@@ -107,41 +129,41 @@ public class NurseController {
 					.body("An error occurred while saving the nurse");
 		}
 	}
-	
+
 	@PutMapping("/{id}")
 	public ResponseEntity<String> updateNurse(
-	        @PathVariable("id") int id, 
-	        @RequestParam String name, 
-	        @RequestParam String password) {
+			@PathVariable("id") int id, 
+			@RequestParam String name, 
+			@RequestParam String password) {
 
-	    // Validar los datos de entrada
-	    if (name == null || name.isEmpty()) {
-	        return ResponseEntity.badRequest().body("Name cannot be empty");
-	    }
-	    if (password == null || password.isEmpty()) {
-	        return ResponseEntity.badRequest().body("Password cannot be empty");
-	    }
+		// Validar los datos de entrada
+		if (name == null || name.isEmpty()) {
+			return ResponseEntity.badRequest().body("Name cannot be empty");
+		}
+		if (password == null || password.isEmpty()) {
+			return ResponseEntity.badRequest().body("Password cannot be empty");
+		}
 
-	    // Verificar si el Nurse existe
-	    Optional<Nurse> existingNurseOpt = nurseRepository.findById(id);
-	    
-	    if (!existingNurseOpt.isPresent()) {
-	        // 404 Not Found si el Nurse no existe
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
-	    }
+		// Verificar si el Nurse existe
+		Optional<Nurse> existingNurseOpt = nurseRepository.findById(id);
 
-	    // Obtener el Nurse existente
-	    Nurse existingNurse = existingNurseOpt.get();
-	    
-	    // Actualizar los campos del Nurse
-	    existingNurse.setName(name);
-	    existingNurse.setPassword(password);
-	    
-	    // Guardar el Nurse actualizado
-	    nurseRepository.save(existingNurse);
+		if (!existingNurseOpt.isPresent()) {
+			// 404 Not Found si el Nurse no existe
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+		}
 
-	    // 200 OK si la actualización es exitosa
-	    return ResponseEntity.ok("Nurse updated successfully");
+		// Obtener el Nurse existente
+		Nurse existingNurse = existingNurseOpt.get();
+
+		// Actualizar los campos del Nurse
+		existingNurse.setName(name);
+		existingNurse.setPassword(password);
+
+		// Guardar el Nurse actualizado
+		nurseRepository.save(existingNurse);
+
+		// 200 OK si la actualización es exitosa
+		return ResponseEntity.ok("Nurse updated successfully");
 	}
 
 	@DeleteMapping("/{id}")
@@ -150,7 +172,7 @@ public class NurseController {
 			nurseRepository.deleteById(id);
 			return ResponseEntity.ok("Nurse deleted successfully");
 		}else {
-			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
 		}
 	}
 

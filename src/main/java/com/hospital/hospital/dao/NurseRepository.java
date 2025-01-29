@@ -15,7 +15,7 @@ import entity.Nurse;
 public interface NurseRepository extends CrudRepository<Nurse, Integer> {
 	 Optional<Nurse> findByName(String name);
 	 
-	 boolean existsByName(String name);
+	 boolean existsByEmail(String email);
 	 
 	 @Query("SELECT n FROM Nurse n WHERE n.name = :name AND n.password = :password")
 	    Optional<Nurse> validateLogin(@Param("name") String name, @Param("password") String password);
