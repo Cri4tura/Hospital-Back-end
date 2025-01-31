@@ -68,21 +68,21 @@ public class NurseController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestParam String name, @RequestParam String password) {
+	public ResponseEntity<Optional<Nurse>> login(@RequestParam String email, @RequestParam String password) {
 		// Verificar si el usuario existe
-		Optional<Nurse> nurse = nurseRepository.findByName(name);
+		Optional<Nurse> nurse = nurseRepository.findByEmail(email);
 
 		if (!nurse.isPresent()) 
 			// 404 Not Found si el nombre de usuario no existe en la base de datos
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
 		// Verificar si la contraseña coincide
 		if (!nurse.get().getPassword().equals(password)) 
 			// 401 Unauthorized si el nombre existe pero la contraseña es incorrecta
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
 		// 200 OK si el login es exitoso
-		return ResponseEntity.ok("Login successful");
+		return ResponseEntity.ok(nurse);
 	}
 
 	@PostMapping("/signin")
