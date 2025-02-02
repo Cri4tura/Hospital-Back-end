@@ -35,4 +35,3 @@ INSERT INTO Nurse (name, surname, email, password, birth_date, register_date) VA
 ('Rafael', 'Díaz', 'rafael.diaz@example.com', 'password123', '1988-05-20', '2023-05-18'),
 ('Clara', 'Fuentes', 'clara.fuentes@example.com', 'password123', '1990-12-31', '2023-05-19'),
 ('Álvaro', 'Silva', 'alvaro.silva@example.com', 'password123', '1992-06-06', '2023-05-20');
-
