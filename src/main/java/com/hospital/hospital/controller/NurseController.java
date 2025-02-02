@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.hospital.dao.NurseRepository;
@@ -87,49 +88,53 @@ public class NurseController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<String> register(@RequestParam String name, @RequestParam String surname,
-			@RequestParam String password, @RequestParam String email, @RequestParam Date birth_date) {
+	public @ResponseBody ResponseEntity<?> register(@RequestBody Nurse nurse) {
 		try {
 			// Validación de campos si alguno está vacío
-			if (name == null || name.isEmpty()) {
+			if (nurse.getName() == null || nurse.getName().isEmpty()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name cannot be empty");
 			} 
 			
-			if (surname == null || surname.isEmpty()) {
+			if (nurse.getSurname() == null || nurse.getSurname().isEmpty()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Surname cannot be empty");
 			} 
 			
-			if (email == null || email.isEmpty()) {
+			if (nurse.getEmail() == null || nurse.getEmail().isEmpty()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email cannot be empty");
 			} 
 
-			if (password == null || password.isEmpty()) {
+			if (nurse.getPassword() == null || nurse.getPassword().isEmpty()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be empty");
 			}  
 
-			if (birth_date == null) {
+			if (nurse.getBirthDate() == null) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Birth date cannot be empty");
 			} 
-
+			
 			// Comprobar si el email ya está registrado
-			if (nurseRepository.existsByEmail(email))
+			if (nurseRepository.existsByEmail(nurse.getEmail())) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Nurse with this email already exists");
 
+			}
+				
 			// Crear y guardar la entidad
 			Nurse n = new Nurse();
-			n.setName(name);
-			n.setSurname(surname);
-			n.setEmail(email);
-			n.setPassword(password);
-			n.setBirthDate(birth_date);
+			n.setName(nurse.getName());
+			n.setSurname(nurse.getSurname());
+			n.setEmail(nurse.getEmail());
+			n.setPassword(nurse.getPassword());
+			n.setBirthDate(nurse.getBirthDate());
+			
+			// Registrar fecha de registro
+	        nurse.setRegisterDate(new Date());
+	        
 			nurseRepository.save(n);
-
-			return ResponseEntity.ok("Saved");
+			
+			return ResponseEntity.status(HttpStatus.CREATED).body(n);
 
 		} catch (Exception e) {
 			// Error interno del servidor
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("An error occurred while saving the nurse");
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
