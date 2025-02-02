@@ -139,48 +139,47 @@ public class NurseController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<String> updateNurse(
-			@PathVariable("id") int id, 
-			@RequestParam String name, 
-			@RequestParam String password) {
+    public ResponseEntity<?> updateNurse(
+            @PathVariable("id") int id,
+            @RequestBody Nurse updatedNurse
+    ) {
 
-		// Validar los datos de entrada
-		if (name == null || name.isEmpty()) {
-			return ResponseEntity.badRequest().body("Name cannot be empty");
-		}
-		if (password == null || password.isEmpty()) {
-			return ResponseEntity.badRequest().body("Password cannot be empty");
-		}
+        // Validación de los datos
+        if (updatedNurse.getName() == null || updatedNurse.getName().isEmpty()) {
+            return ResponseEntity.badRequest().body("Name cannot be empty");
+        }
+        if (updatedNurse.getPassword() == null || updatedNurse.getPassword().isEmpty()) {
+            return ResponseEntity.badRequest().body("Password cannot be empty");
+        }
 
-		// Verificar si el Nurse existe
-		Optional<Nurse> existingNurseOpt = nurseRepository.findById(id);
+        // Verificar si el Nurse existe
+        Optional<Nurse> existingNurseOpt = nurseRepository.findById(id);
+        if (!existingNurseOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+        }
 
-		if (!existingNurseOpt.isPresent()) {
-			// 404 Not Found si el Nurse no existe
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
-		}
+        // Actualizar los campos del Nurse existente
+        Nurse existingNurse = existingNurseOpt.get();
+        existingNurse.setName(updatedNurse.getName());
+        existingNurse.setSurname(updatedNurse.getSurname());
+        existingNurse.setEmail(updatedNurse.getEmail());
+        existingNurse.setPassword(updatedNurse.getPassword());
+        existingNurse.setBirthDate(updatedNurse.getBirthDate());
+        existingNurse.setRegisterDate(updatedNurse.getRegisterDate());
 
-		// Obtener el Nurse existente
-		Nurse existingNurse = existingNurseOpt.get();
+        // Guardar los cambios
+        nurseRepository.save(existingNurse);
 
-		// Actualizar los campos del Nurse
-		existingNurse.setName(name);
-		existingNurse.setPassword(password);
-
-		// Guardar el Nurse actualizado
-		nurseRepository.save(existingNurse);
-
-		// 200 OK si la actualización es exitosa
-		return ResponseEntity.ok("Nurse updated successfully");
-	}
+        return ResponseEntity.ok(existingNurse);
+    }
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteById(@PathVariable("id") int id) {
+	public ResponseEntity<Boolean> deleteById(@PathVariable("id") int id) {
 		if (nurseRepository.existsById(id)) {
 			nurseRepository.deleteById(id);
-			return ResponseEntity.ok("Nurse deleted successfully");
+			return ResponseEntity.ok(true);
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nurse not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
 		}
 	}
 
