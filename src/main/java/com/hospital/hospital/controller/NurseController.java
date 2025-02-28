@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.hospital.hospital.dao.NurseRepository;
+import com.hospital.hospital.response.Response;
+
 import entity.Nurse;
-import entity.NurseResponse;
 
 @RestController
 @RequestMapping("/nurse")
@@ -37,7 +39,7 @@ public class NurseController {
 	 * ________________________GET ALL NURSES________________________
 	 */
 	@GetMapping
-	public ResponseEntity<NurseResponse> getAll() {
+	public ResponseEntity<Response<Nurse>> getAll() {
 		List<Nurse> nurses = (List<Nurse>) nurseRepository.findAll();
 
 		/*
@@ -49,7 +51,7 @@ public class NurseController {
 		/*
 		 * ·········· 200 OK ·········
 		 */
-		return ResponseEntity.ok(new NurseResponse("success", nurses.size(), nurses));
+		return ResponseEntity.ok(new Response<Nurse>("success", nurses.size(), nurses));
 	}
 
 	/*
