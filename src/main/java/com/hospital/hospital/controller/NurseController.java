@@ -25,7 +25,7 @@ import entity.Nurse;
 import entity.NurseResponse;
 
 @RestController
-@RequestMapping("/nurse")
+@RequestMapping("/hospital/nurses")
 public class NurseController {
 
 	@Autowired
