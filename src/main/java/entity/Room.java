@@ -11,6 +11,10 @@ public class Room {
     private String name;
     private String section;
     
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+    
     public Integer getId() {
  		return id;
  	}
@@ -29,4 +33,10 @@ public class Room {
  	public void setSection(String section) {
  		this.section = section;
  	}
+	public Patient getPatient() {
+		return patient;
+	}
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }
