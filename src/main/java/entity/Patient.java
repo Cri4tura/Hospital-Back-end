@@ -29,10 +29,6 @@ public class Patient {
     @ManyToOne
     @JoinColumn(name = "id_mobilization")
     private Mobilization mobilization;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_room")
-    private Room room;
 
 	public Integer getId() {
 		return id;
@@ -145,15 +141,6 @@ public class Patient {
 	public void setMobilization(Mobilization mobilization) {
 		this.mobilization = mobilization;
 	}
-
-	public Room getRoom() {
-		return room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-    
     
     
 }
