@@ -1,13 +1,13 @@
-package entity;
+package com.hospital.hospital.response;
 
 import java.util.List;
- 
-public class NurseResponse {
+
+public class Response<T> {
 	private String status;
     private int count;
-    private List<Nurse> data;
+    private List<T> data;
  
-    public NurseResponse(String status, int count, List<Nurse> data) {
+    public Response(String status, int count, List<T> data) {
         this.status = status;
         this.count = count;
         this.data = data;
@@ -21,7 +21,7 @@ public class NurseResponse {
         return count;
     }
  
-    public List<Nurse> getData() {
+    public List<T> getData() {
         return data;
     }
 }
