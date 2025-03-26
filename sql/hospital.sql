@@ -139,3 +139,4 @@ select * from care;
 select * from diagnosis;
 select * from diet;
 select * from nurse;
+UPDATE room SET patient_id = '3' WHERE id = '2';
